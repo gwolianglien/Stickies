@@ -14,7 +14,6 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    goals: [mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = User = mongoose.model('user', UserSchema);

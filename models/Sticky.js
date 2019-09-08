@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
 
-const GoalSchema = new mongoose.Schema({
-    goal: {
+const StickySchema = new mongoose.Schema({
+    note: {
         type: String,
         required: true
-    },
-    by: {
-        type: Date,
-        required: true,
     },
     status: {
         type: String,
@@ -19,4 +15,4 @@ const GoalSchema = new mongoose.Schema({
     }
 });
 
-module.exports = Goal = mongoose.model('goal', GoalSchema);
+module.exports = Sticky = mongoose.model('sticky', StickySchema);
