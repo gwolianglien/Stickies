@@ -1,5 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://leolien:Fr33falling@goalsharecore-x5aqa.mongodb.net/GoalShareCore?retryWrites=true&w=majority",
-    "jwtSecret": "catalystSHINE053STINGYyouth",
-    "jwtExpiration": 36000000
-}
