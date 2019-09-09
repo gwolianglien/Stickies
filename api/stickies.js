@@ -17,7 +17,7 @@ router.post(
     '/',
     [
         auth,
-        check('note', 'Enter a note for your sticky').not().isEmpty()
+        expressValidator.check('note', 'Enter a note for your sticky').not().isEmpty()
     ],
     async (req, res) => {
         const errors = expressValidator(req);
@@ -66,7 +66,7 @@ router.put(
     ],
     async (req, res) => {
 
-        // const errors = expressValidator(req);
+        // const errors = expressValidator.validationResult(req);
         // if(!errors.array()) {
         //     return res.status(400).json({ errors: errors.array()});
         // }
@@ -108,7 +108,7 @@ router.delete(
     ],
     async (req, res) => {
 
-        // const errors = expressValidator(req);
+        // const errors = expressValidator.validationResult(req);
         // if(!errors.array()) {
         //     return res.status(400).json({ errors: errors.array()});
         // }

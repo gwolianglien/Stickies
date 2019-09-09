@@ -14,11 +14,11 @@ const router = express.Router();
 router.post(
     '/',
     [
-        check('email', 'Please enter a valid email').isEmail(),
-        check('password', 'Please enter a password of 8 or more characters').length({min: 8}),
+        expressValidator.check('email', 'Please enter a valid email').isEmail(),
+        expressValidator.check('password', 'Please enter a password of 8 or more characters').isLength({min: 8}),
     ],
     async (req, res) => {
-        const errors = expressValidator(req);
+        const errors = expressValidator.validationResult(req);
         if(!errors.array()) {
             return res.status(400).json({ errors: errors.array()});
         }
