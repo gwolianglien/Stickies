@@ -18,6 +18,7 @@ router.post(
         expressValidator.check('password', 'Please enter a password of 8 or more characters').isLength({min: 8}),
     ],
     async (req, res) => {
+
         const errors = expressValidator.validationResult(req);
         if(!errors.array()) {
             return res.status(400).json({ errors: errors.array()});
@@ -26,9 +27,8 @@ router.post(
         try {
             const { email, password } = req.body;
 
-
             // Check if user already exists in database
-            let user = await User.findOne({ email: newUser.email });
+            let user = await User.findOne({ email: email });
             if (user) {
                 return res.status(400).json({ msg: 'User already exists.' });
             }

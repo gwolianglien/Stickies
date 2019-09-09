@@ -1,17 +1,32 @@
-import React, { Fragment } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 
-import Provider from 'redux'
+import {Provider} from 'react-redux'
 import store from './redux';
+import { setAuthToken } from './utilities/auth';
+import { load } from './actions/auth';
 
 import Navbar from './components/Navbar';
 import Routing from './Routing';
+import Alert from './components/Alert';
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
 const App = () => {
+
+  useEffect(() => {
+    if (localStorage.token) store.dispatch(load());
+  }, []);
+
   return (
     <Provider store={store}>
-      <Navbar />
-      <Routing />
+      <div className="App">
+        <Alert />
+        <Navbar />
+        <Routing />
+      </div>
     </Provider>
   );
 }
