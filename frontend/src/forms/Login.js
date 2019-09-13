@@ -20,6 +20,7 @@ const Login = ({ login }) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        console.log(loginForm); // TEMPORARY
         login(loginForm);
     }
 

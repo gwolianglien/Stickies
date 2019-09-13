@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -25,7 +26,10 @@ const Landing = ({ authenticated }) => {
     )
 }
 
+Landing.propTypes = {
+    authenticated: PropTypes.bool
+}
 
-const mapStateToProps = state => ({ auth: state.auth });
+const mapStateToProps = state => ({ authenticated: state.auth.authenticated });
 
 export default connect(mapStateToProps)(Landing);

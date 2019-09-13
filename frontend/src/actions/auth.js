@@ -32,7 +32,11 @@ export const load = () => async dispatch => {
 }
 
 export const login = (currUser) => async dispatch => {
-    const config = {headers: {'Content-Type': 'application/json'}}
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
     const body = JSON.stringify(currUser);
     try {
         const res = await axios.post('/api/auth', body, config);
@@ -82,7 +86,7 @@ export const register = (user) => async dispatch => {
 
     } catch(err) {
         const errors = err.response.data.errors;
-        if (errors) errors.forEach(error => dispatch(createAlert(error.message, 'danger')));
+        if (errors) errors.forEach(error => dispatch(createAlert(error.msg, 'danger')));
         dispatch({
             type: REGISTER_FAIL
         });
