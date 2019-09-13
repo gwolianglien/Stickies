@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import './App.css';
 
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import store from './redux';
 import { setAuthToken } from './utilities/auth';
-import { loadUser } from './actions/auth';
+import { load } from './actions/auth';
 
 import Navbar from './components/Navbar';
 import Routing from './Routing';
@@ -17,7 +17,7 @@ if (localStorage.token) {
 const App = () => {
 
   useEffect(() => {
-    if (localStorage.token) store.dispatch(loadUser());
+    if (localStorage.token) store.dispatch(load());
   }, []);
 
   return (

@@ -11,31 +11,19 @@ import {
     LOGOUT,
 } from './constants';
 
-export const loadUser = () => async dispatch => {
-    
-    console.log('load 1');
+export const load = () => async dispatch => {
 
     if(localStorage.token) {
+        console.log(localStorage.token);
         setAuthToken(localStorage.token);
     }
 
-    console.log('load 2');
-
     try {
-
-        console.log('load 2.5');
-
         const res = await axios.get('/api/auth');
-
-        console.log('load 3');
-
         dispatch({
             type: LOADED,
             payload: res.data
         });
-
-        console.log('load 4');
-
     } catch(err) {
         dispatch({
             type: AUTH_ERROR
@@ -43,18 +31,17 @@ export const loadUser = () => async dispatch => {
     }
 }
 
-export const login = (user) => async dispatch => {
+export const login = (currUser) => async dispatch => {
     const config = {headers: {'Content-Type': 'application/json'}}
-    const body = JSON.stringify(user);
+    const body = JSON.stringify(currUser);
     try {
         const res = await axios.post('/api/auth', body, config);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
         });
-        dispatch(loadUser());
-        var welcomeMessage = `Welcome back, ${res.payload.first}!`;
-        dispatch(createAlert(welcomeMessage, 'success'));
+        dispatch(load());
+        dispatch(createAlert('Welcome Back!', 'success'));
 
     } catch(err) {
         const errors = err.response.data.errors;
@@ -80,17 +67,18 @@ export const register = (user) => async dispatch => {
     const body = JSON.stringify(user);
 
     try {
-        
         const res = await axios.post('/api/users', body, config);
+        
         dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data
         });
 
         // Load user once register completes
-        dispatch(loadUser());
-        // dispatch(createUserProfile(res.data));
-        dispatch(createAlert('Welcome to Nimbly!', 'success'));
+        dispatch(
+            load(), 
+            () => dispatch(createAlert('Welcome to Nimbly!', 'success'))
+        );
 
     } catch(err) {
         const errors = err.response.data.errors;

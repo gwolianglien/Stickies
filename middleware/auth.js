@@ -7,11 +7,13 @@ module.exports = (req, res, next) => {
         return res.status(401).json({ msg: 'No JWT, Authorization Denied.' });
     }
     try {
-        const decodedjwt = jwt.verify(
+        // Attempt to verify token
+        const decoded = jwt.verify(
             token, 
             config.get('jwtSecret')
         );
-        req.user = decodedjwt.user;
+
+        req.user = decoded.user;
         next();
     } catch(err) {
         console.error(err.message);

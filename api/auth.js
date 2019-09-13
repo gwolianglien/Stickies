@@ -1,6 +1,6 @@
 /* Dependencies */
 const express = require('express');
-const expressValidator = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const config = require('config');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -16,7 +16,9 @@ const router = express.Router();
 // @access   Private
 router.get(
     '/',
-    auth,
+    [
+        auth
+    ],
     async (req, res) => { 
         try {
             const user = await User.findById(req.user.id).select('-password');
@@ -36,28 +38,28 @@ router.get(
 
 // @route    POST api/auth
 // @desc     Authenticate user and create JWT
-// @access   Private
+// @access   Public
 router.post(
     '/',
     [
-        expressValidator.check('email', 'Please enter your email').not().isEmpty(),
-        expressValidator.check('password', 'Please enter your password').isLength({ min: 8 }),
+        check('email', 'Please enter your email').not().isEmpty(),
+        check('password', 'Please enter your password').isLength({ min: 8 }),
     ],
     async (req, res) => { 
-        const errors = expressValidator.validationResult(req);
+        const errors = validationResult(req);
         if(!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+            return res.status(400).json({ errors: errors.array() });
         }
 
         try {
             // Find user with given email
-            const user = await User.findOne({ email: req.body.email });       
+            const currUser = await User.findOne({ email: req.body.email });       
 
-            if(!user) {
-                return res.status(404).json({ errors: [{ msg: 'Invalid Credentials' }] });
+            if (!currUser) {
+                return res.status(422).json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
-            const isPasswordMatch = await bcryptjs.compare(req.body.password, user.password);
+            const isPasswordMatch = await bcryptjs.compare(req.body.password, currUser.password);
 
             if (!isPasswordMatch) {
               return res.status(422).json({ errors: [{ msg: 'Invalid Credentials' }] });
@@ -66,27 +68,24 @@ router.post(
             // Define 'user' param for header
             const payload = {
                 user: {
-                    id: user.id,
+                    id: currUser.id,
                 }
             }
 
-            // Sign JWT token
             jwt.sign(
                 payload,
                 config.get('jwtSecret'),
                 { expiresIn: config.get('jwtExpiration') },
                 (err) => {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    res.json(user);
+                    if (err) throw err;
+                    res.json(currUser);
                 }
             );
 
         } catch(err) {
             console.error(err.messasge);
             if (err.kind === 'ObjectId') {
-                return res.status(404).json({ errors: [{ msg: 'Invalid Credentials' }] });
+                return res.status(422).json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
             res.status(500).send('Server Error');
         }

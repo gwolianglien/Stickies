@@ -39,6 +39,9 @@ app.use('/api/stickies', stickiesRoute);
 const profileRoute = require('./api/profile');
 app.use('/api/profile', profileRoute);
 
+const authRoute = require('./api/auth');
+app.use('/api/auth', authRoute);
+
 /* Entry */
 app.listen(
     port, 

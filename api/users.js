@@ -33,31 +33,24 @@ router.post(
                 return res.status(400).json({ msg: 'User already exists.' });
             }
 
-            // console.log('user api 2')
-
             const newUser = new User({
                 email: req.body.email,
                 password: req.body.password
             });
 
-            // console.log(user);
-
-            // console.log('2.5')
-
-
             // Generate SALT using BcryptJS and hash password 
             const salt = await bcryptjs.genSalt(10);
             newUser.password = await bcryptjs.hash(newUser.password, salt);
 
-            // console.log('2.75')
-            // Define JWT Payload
+            // Define and sign JWT Payload
             const payload = {
                 user: {
                     id: newUser.id,  // Grab user ID from newUser object
                 }
             }
+            
+            var obj = {}
 
-            // Sign JWT token
             jwt.sign(
                 payload,
                 config.get('jwtSecret'),
@@ -66,19 +59,16 @@ router.post(
                 },
                 (err, token) => {
                     if (err) {
-                        console.log('yikes');
                         return console.error(err);
                     }
-                    newUser.token = token;
+                    obj.token = token;
                 }
             );
-            // console.log('user api 3')
-
+            
             // Save user
-            await newUser.save((err, newUser) => {
+            await newUser.save((err) => {
                 if (err) throw err;
-                res.json(newUser);
-                // console.log('user api 4')
+                res.json(obj);
             });
 
         } catch(err) {
