@@ -35,6 +35,7 @@ router.post(
             const sticky = new Sticky({
                 note: note,
                 status: '',
+                user: req.user.id,
             });
 
             // Save sticky
