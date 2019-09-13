@@ -5,7 +5,7 @@ export const createAlert = (message, border, timeout = 5000) => dispatch => {
     const id = uuid.v4(); 
     dispatch({
         type: CREATE_ALERT,
-        data: {
+        payload: {
             id,
             message,
             border,
@@ -14,6 +14,6 @@ export const createAlert = (message, border, timeout = 5000) => dispatch => {
 
     setTimeout(() => dispatch({ 
         type: REMOVE_ALERT, 
-        data: id 
+        payload: id 
     }), timeout);
 }

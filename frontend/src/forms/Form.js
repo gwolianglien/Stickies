@@ -20,7 +20,7 @@ const Form = () => {
     return (
         <form onSubmit={event=>handleSubmit(event)}>
             <div className="form-group">
-                <label for="sticky">Add a Sticky!</label>
+                <label htmlFor="sticky">Add a Sticky!</label>
                 <input type="text" 
                     className="form-control" 
                     id="sticky"

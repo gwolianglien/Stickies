@@ -30,8 +30,14 @@ app.use(express.json({ extended: false }));
 const port = process.env.port || 5000;
 
 /* APIs */
-var usersRoute = require('./api/users');
+const usersRoute = require('./api/users');
 app.use('/api/users', usersRoute);
+
+const stickiesRoute = require('./api/stickies');
+app.use('/api/stickies', stickiesRoute);
+
+const profileRoute = require('./api/profile');
+app.use('/api/profile', profileRoute);
 
 /* Entry */
 app.listen(

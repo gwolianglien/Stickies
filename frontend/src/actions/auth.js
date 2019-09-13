@@ -11,16 +11,31 @@ import {
     LOGOUT,
 } from './constants';
 
-export const load = () => async dispatch => {
+export const loadUser = () => async dispatch => {
+    
+    console.log('load 1');
+
     if(localStorage.token) {
         setAuthToken(localStorage.token);
     }
+
+    console.log('load 2');
+
     try {
+
+        console.log('load 2.5');
+
         const res = await axios.get('/api/auth');
+
+        console.log('load 3');
+
         dispatch({
             type: LOADED,
-            data: res.data
+            payload: res.data
         });
+
+        console.log('load 4');
+
     } catch(err) {
         dispatch({
             type: AUTH_ERROR
@@ -35,10 +50,10 @@ export const login = (user) => async dispatch => {
         const res = await axios.post('/api/auth', body, config);
         dispatch({
             type: LOGIN_SUCCESS,
-            data: res.data
+            payload: res.data
         });
-        dispatch(load());
-        var welcomeMessage = `Welcome back, ${res.data.first}!`;
+        dispatch(loadUser());
+        var welcomeMessage = `Welcome back, ${res.payload.first}!`;
         dispatch(createAlert(welcomeMessage, 'success'));
 
     } catch(err) {
@@ -58,18 +73,22 @@ export const logout = () => async dispatch => {
 }
 
 export const register = (user) => async dispatch => {
-    const config = {header: {'Content-Type': 'application/json'}}
-    const body = JSON.stringify(user);
-    try {
-        const res = await axios.post('/api/users', body, config);
 
+    const config = {
+        headers: {'Content-Type': 'application/json'}
+    };
+    const body = JSON.stringify(user);
+
+    try {
+        
+        const res = await axios.post('/api/users', body, config);
         dispatch({
             type: REGISTER_SUCCESS,
-            data: res.data
+            payload: res.data
         });
 
         // Load user once register completes
-        dispatch(load());
+        dispatch(loadUser());
         // dispatch(createUserProfile(res.data));
         dispatch(createAlert('Welcome to Nimbly!', 'success'));
 

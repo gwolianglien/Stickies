@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
  
 // Actions
 import { register } from '../actions/auth';
 import { createAlert } from '../actions/alert';
 
-const Register = ({ register, createAlert }) => {
+const Register = ({ authenticated, register, createAlert }) => {
 
-    const [registerForm, setState] = useState({
+    const [registerForm, setStateValue] = useState({
         email: '',
         password: '',
         confirmpassword: '',
     });
 
-    const handleChange = event => setState({
+    const handleChange = event => setStateValue({
         ...registerForm, 
-        [event.target.name]: event.target.value,
+        [event.target.id]: event.target.value,
     });
 
     const handleSubmit = async event => {
@@ -31,13 +31,16 @@ const Register = ({ register, createAlert }) => {
         }
     }
 
+    if (authenticated) {
+        return <Redirect to='/home' />
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={event => handleSubmit(event)}>
             <div className="form-group">
                 <label htmlFor="email">Email*</label>
                 <input type="email" 
                     className="form-control" 
-                    name="email"
                     id="email" 
                     aria-describedby="email" 
                     placeholder="" 
@@ -50,7 +53,6 @@ const Register = ({ register, createAlert }) => {
                 <label htmlFor="password">Password</label>
                 <input type="password" 
                     className="form-control" 
-                    name="password" 
                     id="password" 
                     placeholder=""
                     value={registerForm.password}
@@ -61,7 +63,6 @@ const Register = ({ register, createAlert }) => {
                 <label htmlFor="confirmpassword">Password (confirm)</label>
                 <input type="password" 
                     className="form-control" 
-                    name="confirmpassword" 
                     id="confirmpassword" 
                     placeholder="" 
                     value={registerForm.confirmpassword}
@@ -76,12 +77,15 @@ const Register = ({ register, createAlert }) => {
 }
 
 Register.propTypes = {
+    authenticated: PropTypes.bool,
     register: PropTypes.func.isRequired,
     createAlert: PropTypes.func.isRequired,
 }
 
+const mapStateToProps = state => ({ authenticated: state.auth.authenticated });
+
 export default connect(
-    null, 
+    mapStateToProps, 
     { 
         createAlert,
         register

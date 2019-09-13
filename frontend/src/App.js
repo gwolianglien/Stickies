@@ -4,7 +4,7 @@ import './App.css';
 import {Provider} from 'react-redux'
 import store from './redux';
 import { setAuthToken } from './utilities/auth';
-import { load } from './actions/auth';
+import { loadUser } from './actions/auth';
 
 import Navbar from './components/Navbar';
 import Routing from './Routing';
@@ -17,14 +17,14 @@ if (localStorage.token) {
 const App = () => {
 
   useEffect(() => {
-    if (localStorage.token) store.dispatch(load());
+    if (localStorage.token) store.dispatch(loadUser());
   }, []);
 
   return (
     <Provider store={store}>
       <div className="App">
-        <Alert />
         <Navbar />
+        <Alert />
         <Routing />
       </div>
     </Provider>

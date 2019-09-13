@@ -77,25 +77,25 @@ const Stickies = () => {
             date: 'date'
         },
         {
-            id: '1',
+            id: '2',
             note: 'hello, world',
             status: 'incomplete',
             date: 'date'
         },
         {
-            id: '1',
+            id: '3',
             note: 'hello, world',
             status: 'incomplete',
             date: 'date'
         },
         {
-            id: '1',
+            id: '4',
             note: 'hello, world',
             status: 'incomplete',
             date: 'date'
         },
         {
-            id: '1',
+            id: '5',
             note: 'hello, world',
             status: 'incomplete',
             date: 'date'

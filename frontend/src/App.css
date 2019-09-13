@@ -1,7 +1,7 @@
 .App { width: 100vw; height: auto; margin: 0; padding: 0; }
 
 .hide { display: none; }
-.overlay { z-index: 1; }
+.overlay { z-index: 1; position: relative; }
 
 /* Responsive Content */
 /* Default: any screen with screen wider than 1204px */ 

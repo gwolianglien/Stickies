@@ -1,51 +1,59 @@
 const express = require('express');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 // Middleware
-const expressValidator = require('express-validator')
+const { check, validationResult } = require('express-validator');
 
 // Model
 const User = require('../models/User');
 
 const router = express.Router();
 
-// @route     POST api/user
+// @route     POST api/users
 // @desc      Create user
 // @access    Public
 router.post(
     '/',
     [
-        expressValidator.check('email', 'Please enter a valid email').isEmail(),
-        expressValidator.check('password', 'Please enter a password of 8 or more characters').isLength({min: 8}),
+        check('email', 'Please enter a valid email').isEmail(),
+        check('password', 'Please enter a password of 8 or more characters').isLength({min: 8}),
     ],
     async (req, res) => {
 
-        const errors = expressValidator.validationResult(req);
+        const errors = validationResult(req);
         if(!errors.array()) {
             return res.status(400).json({ errors: errors.array()});
         }
 
         try {
-            const { email, password } = req.body;
-
-            // Check if user already exists in database
-            let user = await User.findOne({ email: email });
+            let user = await User.findOne({ email: req.body.email });
             if (user) {
                 return res.status(400).json({ msg: 'User already exists.' });
             }
 
-            user = new User({
-                email: email,
-                password: password
+            // console.log('user api 2')
+
+            const newUser = new User({
+                email: req.body.email,
+                password: req.body.password
             });
+
+            // console.log(user);
+
+            // console.log('2.5')
+
 
             // Generate SALT using BcryptJS and hash password 
             const salt = await bcryptjs.genSalt(10);
-            user.password = await bcryptjs.hash(user.password, salt);
+            newUser.password = await bcryptjs.hash(newUser.password, salt);
 
+            // console.log('2.75')
             // Define JWT Payload
             const payload = {
                 user: {
-                    id: user.id,  // Grab user ID from newUser object
+                    id: newUser.id,  // Grab user ID from newUser object
                 }
             }
 
@@ -54,20 +62,23 @@ router.post(
                 payload,
                 config.get('jwtSecret'),
                 { 
-                    expiresIn: config.get('jwtExpiration') 
+                    expiresIn: config.get('jwtExpiration'),
                 },
                 (err, token) => {
                     if (err) {
+                        console.log('yikes');
                         return console.error(err);
                     }
-                    user.token = token;
+                    newUser.token = token;
                 }
             );
+            // console.log('user api 3')
 
             // Save user
-            await user.save((err, user) => {
+            await newUser.save((err, newUser) => {
                 if (err) throw err;
-                res.json(user);
+                res.json(newUser);
+                // console.log('user api 4')
             });
 
         } catch(err) {
