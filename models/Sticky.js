@@ -9,6 +9,10 @@ const StickySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+    },
     date: {
         type: Date,
         default: Date.now,
