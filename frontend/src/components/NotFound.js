@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 const NotFound = () => {
     return (
-        <Fragment>
-            <h1>NOT FOUND</h1>
-        </Fragment>
+        <div className="app-border app-border-top">
+            <h1>Sorry, we couldn't find the page you're looking for!</h1>
+        </div>
     )
 }
 

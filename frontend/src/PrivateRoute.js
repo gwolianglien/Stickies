@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const PrivateRoute = ({ component: Component, authenticated, loaded , ...rest }) => (
@@ -13,18 +13,18 @@ const PrivateRoute = ({ component: Component, authenticated, loaded , ...rest })
 )
 
 PrivateRoute.propTypes = {
-    authenticated: PropTypes.bool.isRequired,
-    loaded: PropTypes.bool.isRequired,
+    authenticated: PropTypes.bool,
+    loaded: PropTypes.bool,
 }
 
 const mapStateToProps = state => (
     { 
-        authenticated: state.authenticated,
-        loaded: state.loaded,
+        authenticated: state.user.authenticated,
+        loaded: state.user.loaded,
     }
 );
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps
-)(PrivateRoute);
+)(PrivateRoute));
 

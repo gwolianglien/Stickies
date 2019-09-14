@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 
 import Login from './Login';
 
@@ -22,6 +22,7 @@ const Landing = ({ authenticated }) => {
 
     return (
         <div className="app-border app-border-top">
+            { console.log(authenticated)}
             <Banner />
             <Login />
         </div>
@@ -34,10 +35,10 @@ Landing.propTypes = {
 
 const mapStateToProps = state => (
     { 
-        authenticated: state.authenticated 
+        authenticated: state.user.authenticated 
     }
 );
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps
-)(Landing);
+)(Landing));

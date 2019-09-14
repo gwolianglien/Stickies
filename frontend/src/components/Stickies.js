@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const Sticky = (props) => {
 
@@ -67,56 +69,30 @@ const Sticky = (props) => {
     )
 }
 
-const Stickies = (props) => {
-
-    // const myStickes = [
-    //     {
-    //         id: '1',
-    //         note: 'hello, world',
-    //         status: 'incomplete',
-    //         date: 'date'
-    //     },
-    //     {
-    //         id: '2',
-    //         note: 'hello, world',
-    //         status: 'incomplete',
-    //         date: 'date'
-    //     },
-    //     {
-    //         id: '3',
-    //         note: 'hello, world',
-    //         status: 'incomplete',
-    //         date: 'date'
-    //     },
-    //     {
-    //         id: '4',
-    //         note: 'hello, world',
-    //         status: 'incomplete',
-    //         date: 'date'
-    //     },
-    //     {
-    //         id: '5',
-    //         note: 'hello, world',
-    //         status: 'incomplete',
-    //         date: 'date'
-    //     },
-    // ];
-
-    const myStickies = props.myStickies;
-
+const Stickies = ({ stickies }) => {
     return (
         <div className="container-fluid row card-columns d-flex flex-wrap">
-            {
-                myStickies.map((sticky) => {
-                    return (
-                        <div key={sticky.id} className="col-md-4">
-                            <Sticky card={sticky} />
-                        </div>
-                    )
-                })
-            }
+            {stickies.map((sticky) => {
+                return (
+                    <div key={sticky.id} className="col-md-4">
+                        <Sticky card={sticky} />
+                    </div>
+                )
+            })}
         </div>
     )
 }
 
-export default Stickies;
+Stickies.propTypes = {
+    stickies: PropTypes.array
+}
+
+const mapStateToProps = state => (
+    { 
+        stickies: state.profile.stickies 
+    }
+);
+
+export default connect(
+    mapStateToProps
+)(Stickies);

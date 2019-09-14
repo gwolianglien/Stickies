@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../actions/user';
 
-const Navbar = ({ authenticated, loaded, logout }) => (
+const Navbar = ({ authenticated, logout }) => (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to='/'>Stickies</Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,7 +14,7 @@ const Navbar = ({ authenticated, loaded, logout }) => (
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto"></ul>
             <ul className="navbar-nav">
-                { authenticated && loaded ?
+                { authenticated ?
                     <li className="nav-item">
                         <Link className="nav-link" to="/" onClick={() => logout()}>Logout</Link>
                     </li>
@@ -36,8 +36,8 @@ Navbar.propTypes = {
 
 const mapStateToProps = state => (
     {
-        authenticated: state.authenticated,
-        loaded: state.loaded
+        authenticated: state.user.authenticated,
+        loaded: state.user.loaded
     }
 );
 
