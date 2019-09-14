@@ -114,8 +114,8 @@ router.post(
     }
 );
 
-// @route    POST api/profile/:sticky_id/update
-// @desc     Create new sticky and add to current user's list
+// @route    PUT api/profile/:sticky_id
+// @desc     Update an existing sticky
 // @access   Private
 router.put(
     '/:sticky_id',
@@ -123,22 +123,33 @@ router.put(
         auth,
     ],
     async (req, res) => {
-
         try {
 
-            let sticky = await Sticky.findById(req.params.sticky_id);
-            if (!sticky) {
-                return res.status(404).json({ msg: 'Sticky not found'});
-            }
-            
-            // Update attributes
-            sticky.note = req.body.note;
-            sticky.status = req.body.status;
+            await Sticky.findOneAndUpdate(
+                { 
+                    "_id": req.params.sticky_id 
+                }, 
+                {
+                    status: req.body.status
+                },
+                (err) => {
+                    if (err) throw err;
+                }
+            );
 
-            await sticky.save((err, sticky) => {
-                if (err) throw err;
-                res.json(sticky);
-            });
+            // let sticky = await Sticky.findById(req.params.sticky_id);
+            // if (!sticky) {
+            //     return res.status(404).json({ msg: 'Sticky not found'});
+            // }
+            
+            // // Update attributes
+            // sticky.note = req.body.note;
+            // sticky.status = req.body.status;
+
+            // await sticky.save((err, sticky) => {
+            //     if (err) throw err;
+            //     res.json(sticky);
+            // });
 
         } catch(err) {
             console.error(err.message);
@@ -150,8 +161,8 @@ router.put(
     }
 );
 
-// @route    POST api/profile/:sticky_id/update
-// @desc     Create new sticky and add to current user's list
+// @route    DELETE api/profile/:sticky_id
+// @desc     Remove sticky
 // @access   Private
 router.delete(
     '/:sticky_id',
@@ -161,24 +172,33 @@ router.delete(
     async (req, res) => {
 
         try {
-
             let sticky = await Sticky.findById(req.params.sticky_id);
             if (!sticky) {
-                return res.status(404).json({ msg: 'Sticky not found'});
+                return res.status(404).json({ msg: 'Object Missing'});
             }
-            
-            await sticky.findOneAndDelete({ '_id': req.params.sticky_id});
-            res.json({ msg: 'Sticky Removed' });
 
+            let profile = await Profile.findById(req.user.id);
+            if (!profile) {
+                return res.status(404).json({ msg: 'Object Missing' });
+            }
+  
+            profile.stickies = profile.stickies.map(sticky => sticky.id !== req.params.sticky_id);
+
+            await sticky.findOneAndDelete({ '_id': req.params.sticky_id});
+            await profile.save(
+                (err) => {
+                    if (err) throw err;
+                    res.json({ msg: 'Sticky Removed' });
+                }
+            );
         } catch(err) {
             console.error(err.message);
             if (err.kind === 'ObjectId') {
-                return res.status(404).json({ msg: 'Sticky not found'});
+                return res.status(404).json({ msg: 'Object Missing'});
             }
             res.status(500).send('Server Error');
         }
     }
 );
-
 
 module.exports = router;
