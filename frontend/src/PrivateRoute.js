@@ -13,8 +13,8 @@ const PrivateRoute = ({ component: Component, authenticated, loaded , ...rest })
 )
 
 PrivateRoute.propTypes = {
-    authenticated: PropTypes.bool,
-    loaded: PropTypes.bool,
+    authenticated: PropTypes.bool.isRequired,
+    loaded: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = state => (

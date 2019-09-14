@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -6,10 +6,10 @@ import { Redirect } from 'react-router-dom';
 import Login from './Login';
 
 const Banner = () => (
-    <div className="banner">
+    <div className="banner center">
         <h1>Stickies</h1>
         <p>
-            Your Post-It Notes reimagined. Digitalized. Oh, and upgraded.
+            Your Post-It Notes. Reimagined, Digitalized, and oh, Upgraded.
         </p>
     </div>
 )
@@ -21,10 +21,10 @@ const Landing = ({ authenticated }) => {
     }
 
     return (
-        <Fragment>
+        <div className="app-border app-border-top">
             <Banner />
             <Login />
-        </Fragment>
+        </div>
     )
 }
 

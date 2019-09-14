@@ -36,43 +36,48 @@ const Register = ({ authenticated, register, createAlert }) => {
     }
 
     return (
-        <form onSubmit={event => handleSubmit(event)}>
-            <div className="form-group">
-                <label htmlFor="email">Email*</label>
-                <input type="email" 
-                    className="form-control" 
-                    id="email" 
-                    aria-describedby="email" 
-                    placeholder="" 
-                    value={registerForm.email}
-                    onChange={event => handleChange(event)}
-                />
-                <small id="email" className="form-text text-muted">We'll never share your email with anyone else.</small>
+        <div className="app-border app-border-top">
+            <div className="banner center">
+                <h1>Register</h1>
             </div>
-            <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input type="password" 
-                    className="form-control" 
-                    id="password" 
-                    placeholder=""
-                    value={registerForm.password}
-                    onChange={event => handleChange(event)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="confirmpassword">Password (confirm)</label>
-                <input type="password" 
-                    className="form-control" 
-                    id="confirmpassword" 
-                    placeholder="" 
-                    value={registerForm.confirmpassword}
-                    onChange={event => handleChange(event)}
-                />
-                <small id="emailHelp" className="form-text text-muted">Your password needs to be at least 8 characters long.</small>
-            </div>
-            <button type="submit" className="btn btn-primary btn-block">Register</button>
-            <small id="redirect" className="form-text text-muted"><Link to='/login'>Already have an account?</Link></small>
-        </form>
+            <form onSubmit={event => handleSubmit(event)}>
+                <div className="form-group">
+                    <label htmlFor="email">Email*</label>
+                    <input type="email" 
+                        className="form-control" 
+                        id="email" 
+                        aria-describedby="email" 
+                        placeholder="" 
+                        value={registerForm.email}
+                        onChange={event => handleChange(event)}
+                    />
+                    <small id="email" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input type="password" 
+                        className="form-control" 
+                        id="password" 
+                        placeholder=""
+                        value={registerForm.password}
+                        onChange={event => handleChange(event)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="confirmpassword">Password (confirm)</label>
+                    <input type="password" 
+                        className="form-control" 
+                        id="confirmpassword" 
+                        placeholder="" 
+                        value={registerForm.confirmpassword}
+                        onChange={event => handleChange(event)}
+                    />
+                    <small id="emailHelp" className="form-text text-muted">Your password needs to be at least 8 characters long.</small>
+                </div>
+                <button type="submit" className="btn btn-primary btn-block">Register</button>
+                <small id="redirect" className="form-text text-muted"><Link to='/login'>Already have an account?</Link></small>
+            </form>
+        </div>
     );
 }
 

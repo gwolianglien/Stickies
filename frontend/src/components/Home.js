@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -18,7 +18,7 @@ const Banner = () => {
 
 const Home = ({ stickies }) => {
     return (
-        <Fragment>
+        <div className="app-border app-border-top">
             <Banner />
             <div className="form">
                 <StickyForm />
@@ -29,7 +29,7 @@ const Home = ({ stickies }) => {
                 />
             </div>
 
-        </Fragment>
+        </div>
     )
 }
 
