@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 
 const Sticky = (props) => {
 
-    const [defaultState, setValues] = useState({
-        status: props.card.status,
-        showUpdateButton: false,
-    });
-
     const {
         id,
         note,
         status,
         date
     } = props.card;
+
+    const [defaultState, setValues] = useState({
+        status: status,
+        showUpdateButton: false,
+    });
 
     let show = defaultState.showUpdateButton ? null : 'hide';
 
@@ -67,45 +67,47 @@ const Sticky = (props) => {
     )
 }
 
-const Stickies = () => {
+const Stickies = (props) => {
 
-    const myStickes = [
-        {
-            id: '1',
-            note: 'hello, world',
-            status: 'incomplete',
-            date: 'date'
-        },
-        {
-            id: '2',
-            note: 'hello, world',
-            status: 'incomplete',
-            date: 'date'
-        },
-        {
-            id: '3',
-            note: 'hello, world',
-            status: 'incomplete',
-            date: 'date'
-        },
-        {
-            id: '4',
-            note: 'hello, world',
-            status: 'incomplete',
-            date: 'date'
-        },
-        {
-            id: '5',
-            note: 'hello, world',
-            status: 'incomplete',
-            date: 'date'
-        },
-    ];
+    // const myStickes = [
+    //     {
+    //         id: '1',
+    //         note: 'hello, world',
+    //         status: 'incomplete',
+    //         date: 'date'
+    //     },
+    //     {
+    //         id: '2',
+    //         note: 'hello, world',
+    //         status: 'incomplete',
+    //         date: 'date'
+    //     },
+    //     {
+    //         id: '3',
+    //         note: 'hello, world',
+    //         status: 'incomplete',
+    //         date: 'date'
+    //     },
+    //     {
+    //         id: '4',
+    //         note: 'hello, world',
+    //         status: 'incomplete',
+    //         date: 'date'
+    //     },
+    //     {
+    //         id: '5',
+    //         note: 'hello, world',
+    //         status: 'incomplete',
+    //         date: 'date'
+    //     },
+    // ];
+
+    const myStickies = props.myStickies;
 
     return (
         <div className="container-fluid row card-columns d-flex flex-wrap">
             {
-                myStickes.map((sticky) => {
+                myStickies.map((sticky) => {
                     return (
                         <div key={sticky.id} className="col-md-4">
                             <Sticky card={sticky} />

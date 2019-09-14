@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import Login from '../forms/Login';
+import Login from './Login';
 
 const Banner = () => (
     <div className="banner">
         <h1>Stickies</h1>
-        <p>Keep your notes and reminders organized and up-to-date with Stickies.</p>
+        <p>
+            Your Post-It Notes reimagined. Digitalized. Oh, and upgraded.
+        </p>
     </div>
 )
 
@@ -30,6 +32,12 @@ Landing.propTypes = {
     authenticated: PropTypes.bool
 }
 
-const mapStateToProps = state => ({ authenticated: state.auth.authenticated });
+const mapStateToProps = state => (
+    { 
+        authenticated: state.authenticated 
+    }
+);
 
-export default connect(mapStateToProps)(Landing);
+export default connect(
+    mapStateToProps
+)(Landing);

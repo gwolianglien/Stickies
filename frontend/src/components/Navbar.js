@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth';
+import { logout } from '../actions/user';
 
-const Navbar = ({ authenticated, logout }) => (
+const Navbar = ({ authenticated, loaded, logout }) => (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to='/'>Stickies</Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,7 +14,7 @@ const Navbar = ({ authenticated, logout }) => (
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto"></ul>
             <ul className="navbar-nav">
-                { authenticated ?
+                { authenticated && loaded ?
                     <li className="nav-item">
                         <Link className="nav-link" to="/" onClick={() => logout()}>Logout</Link>
                     </li>
@@ -30,12 +30,20 @@ const Navbar = ({ authenticated, logout }) => (
 
 Navbar.propTypes = {
     authenticated: PropTypes.bool,
+    loaded: PropTypes.bool,
     logout: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({ authenticated: state.auth.authenticated });
+const mapStateToProps = state => (
+    {
+        authenticated: state.authenticated,
+        loaded: state.loaded
+    }
+);
 
 export default connect(
     mapStateToProps,
-    { logout }
+    { 
+        logout 
+    }
 )(Navbar);

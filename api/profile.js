@@ -54,7 +54,7 @@ router.get(
             if (!profile) {
                 return res.status(404).json({ msg: 'Profile not found' });
             }
-            res.json(profile);
+            res.json(profile.stickies);
         } catch(err) {
             console.error(err.message);
             res.status(500).send('Server Error');
@@ -99,9 +99,9 @@ router.post(
             });
 
             profile.stickies.unshift(sticky);
-            await profile.save((err, profile) => {
+            await profile.save((err) => {
                 if (err) throw err;
-                res.json(profile);
+                res.json(sticky);
             });
 
         } catch(err) {
@@ -125,31 +125,32 @@ router.put(
     async (req, res) => {
         try {
 
-            await Sticky.findOneAndUpdate(
-                { 
-                    "_id": req.params.sticky_id 
-                }, 
-                {
-                    status: req.body.status
-                },
-                (err) => {
-                    if (err) throw err;
-                }
-            );
+            // await Sticky.findOneAndUpdate(
+            //     { 
+            //         "_id": req.params.sticky_id 
+            //     }, 
+            //     {
+            //         status: req.body.status
+            //     },
+            //     (err) => {
+            //         if (err) throw err;
+            //         res.json({ "_id" : req.params.sticky_id });
+            //     }
+            // );
 
-            // let sticky = await Sticky.findById(req.params.sticky_id);
-            // if (!sticky) {
-            //     return res.status(404).json({ msg: 'Sticky not found'});
-            // }
+            let sticky = await Sticky.findById(req.params.sticky_id);
+            if (!sticky) {
+                return res.status(404).json({ msg: 'Sticky not found'});
+            }
             
-            // // Update attributes
-            // sticky.note = req.body.note;
-            // sticky.status = req.body.status;
+            // Update attributes
+            sticky.note = req.body.note;
+            sticky.status = req.body.status;
 
-            // await sticky.save((err, sticky) => {
-            //     if (err) throw err;
-            //     res.json(sticky);
-            // });
+            await sticky.save((err, sticky) => {
+                if (err) throw err;
+                res.json(sticky);
+            });
 
         } catch(err) {
             console.error(err.message);

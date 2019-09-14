@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom'
  
 // Actions
-import { register } from '../actions/auth';
+import { register } from '../actions/user';
 import { createAlert } from '../actions/alert';
 
 const Register = ({ authenticated, register, createAlert }) => {
@@ -82,7 +82,11 @@ Register.propTypes = {
     createAlert: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({ authenticated: state.auth.authenticated });
+const mapStateToProps = state => (
+    { 
+        authenticated: state.authenticated 
+    }
+);
 
 export default connect(
     mapStateToProps, 

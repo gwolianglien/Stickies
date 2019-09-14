@@ -1,23 +1,48 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import Form from '../forms/Form';
+import StickyForm from './StickyForm';
 import Stickies from './Stickies';
 
-const Home = () => {
+const Banner = () => {
+    return (
+        <div className="banner">
+            <h1>Stickies</h1>
+            <p>
+                Keep organized. Stay on top.
+            </p>
+        </div>
+    )
+}
+
+const Home = ({ stickies }) => {
     return (
         <Fragment>
-            <div className="banner">
-                <h1>Home</h1>
-            </div>
+            <Banner />
             <div className="form">
-                <Form />
+                <StickyForm />
             </div>
             <div className="stickies">
-                <Stickies />
+                <Stickies 
+                    myStickies={stickies}
+                />
             </div>
 
         </Fragment>
     )
 }
 
-export default Home;
+Home.propTypes = {
+    stickies: PropTypes.array
+}
+
+const mapStateToProps = state => (
+    { 
+        stickies: state.stickies 
+    }
+);
+
+export default connect(
+    mapStateToProps
+)(Home);

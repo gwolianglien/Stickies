@@ -4,7 +4,7 @@ import './App.css';
 import { Provider } from 'react-redux'
 import store from './redux';
 import { setAuthToken } from './utilities/auth';
-import { load } from './actions/auth';
+import { load } from './actions/user';
 
 import Navbar from './components/Navbar';
 import Routing from './Routing';

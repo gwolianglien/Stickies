@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const PrivateRoute = ({ component: Component, auth: { authenticated, loaded }, ...rest }) => (
+const PrivateRoute = ({ component: Component, authenticated, loaded , ...rest }) => (
     <Route {...rest} render={(props) => (
         authenticated && loaded ?
             <Component {...props} />
@@ -17,7 +17,12 @@ PrivateRoute.propTypes = {
     loaded: PropTypes.bool,
 }
 
-const mapStateToProps = (state) => ({ auth: state.auth });
+const mapStateToProps = state => (
+    { 
+        authenticated: state.authenticated,
+        loaded: state.loaded,
+    }
+);
 
 export default connect(
     mapStateToProps

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 // Actions
-import { login } from '../actions/auth';
+import { login } from '../actions/user';
 
 const Login = ({ login }) => {
     
@@ -20,7 +20,6 @@ const Login = ({ login }) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        console.log(loginForm); // TEMPORARY
         login(loginForm);
     }
 
