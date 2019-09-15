@@ -28,9 +28,13 @@ export const load = () => async dispatch => {
             type: LOADED,
             payload: res.data
         });
+        dispatch(loadProfile());
     } catch(err) {
         dispatch({
             type: AUTH_ERROR
+        });
+        dispatch({
+            type: CLEAR_PROFILE
         });
     }
 }
@@ -49,7 +53,6 @@ export const login = (user) => async dispatch => {
             payload: res.data
         });
         dispatch(load());
-        dispatch(loadProfile());
         dispatch(createAlert('Welcome Back!', 'success'));
 
     } catch(err) {

@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+// actions
 import { postSticky } from '../actions/profile';
 
 const StickyForm = ({ postSticky }) => {
 
     const [stickyForm, setValues] = useState({
         note: '',
+
     });
 
     const handleChange = event => setValues({
         ...stickyForm,
         [event.target.name]: event.target.value, 
+
     });
 
     const handleSubmit = async event => {
@@ -20,7 +24,7 @@ const StickyForm = ({ postSticky }) => {
     }
 
     return (
-        <form onSubmit={event=>handleSubmit(event)}>
+        <form id="stickyForm" onSubmit={event=>handleSubmit(event)}>
             <div className="form-group">
                 <label htmlFor="note">Add a Sticky!</label>
                 <input type="text" 

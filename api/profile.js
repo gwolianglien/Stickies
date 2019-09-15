@@ -54,7 +54,15 @@ router.get(
             if (!profile) {
                 return res.status(404).json({ msg: 'Profile not found' });
             }
-            res.json(profile.stickies);
+
+            const stickies = [];
+            for (var i = 0; i < profile.stickies.length; i++) {
+                var curr = profile.stickies[i];
+                let sticky = await Sticky.findById(curr._id);
+                stickies.push(sticky);
+            }
+            res.json(stickies);
+            
         } catch(err) {
             console.error(err.message);
             res.status(500).send('Server Error');
@@ -101,7 +109,7 @@ router.post(
             profile.stickies.unshift(sticky);
             await profile.save((err) => {
                 if (err) throw err;
-                res.json(sticky);
+                res.json(profile.stickies);
             });
 
         } catch(err) {
@@ -124,30 +132,18 @@ router.put(
     ],
     async (req, res) => {
         try {
-
-            // await Sticky.findOneAndUpdate(
-            //     { 
-            //         "_id": req.params.sticky_id 
-            //     }, 
-            //     {
-            //         status: req.body.status
-            //     },
-            //     (err) => {
-            //         if (err) throw err;
-            //         res.json({ "_id" : req.params.sticky_id });
-            //     }
-            // );
-
             let sticky = await Sticky.findById(req.params.sticky_id);
             if (!sticky) {
-                return res.status(404).json({ msg: 'Sticky not found'});
+                return res.status(404).json({ msg: 'Sticky missing' });
             }
-            
-            // Update attributes
-            sticky.note = req.body.note;
-            sticky.status = req.body.status;
 
-            await sticky.save((err, sticky) => {
+            await Sticky.findOneAndUpdate(
+                { '_id': req.params.sticky_id },
+                {
+                    status: req.body.status,
+                },
+                { useFindAndModify: false, },
+                (err, sticky) => {
                 if (err) throw err;
                 res.json(sticky);
             });
@@ -175,23 +171,31 @@ router.delete(
         try {
             let sticky = await Sticky.findById(req.params.sticky_id);
             if (!sticky) {
-                return res.status(404).json({ msg: 'Object Missing'});
+                return res.status(404).json({ msg: 'Sticky Missing'});
             }
 
-            let profile = await Profile.findById(req.user.id);
+            let profile = await Profile.findOne({ user: req.user.id });
             if (!profile) {
-                return res.status(404).json({ msg: 'Object Missing' });
+                return res.status(404).json({ msg: 'Profile Missing' });
             }
-  
-            profile.stickies = profile.stickies.map(sticky => sticky.id !== req.params.sticky_id);
 
-            await sticky.findOneAndDelete({ '_id': req.params.sticky_id});
+            await Sticky.findOneAndDelete(
+                { '_id': req.params.sticky_id },
+                (err) => {
+                    if (err) throw err;
+                }
+            );
+
+            var removeIdx = profile.stickies.map(obj => obj._id).indexOf(req.params.sticky_id);
+            profile.stickies.splice(removeIdx, 1);
+            
             await profile.save(
                 (err) => {
                     if (err) throw err;
                     res.json({ msg: 'Sticky Removed' });
                 }
             );
+
         } catch(err) {
             console.error(err.message);
             if (err.kind === 'ObjectId') {
