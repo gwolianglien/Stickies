@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 const config = require('config');
 const mongoURI = config.get('mongoURI');
 
+// Dependencies
+const path = require('path');
+
 /* DB Connection */
 const connection = async () => {
     try {
@@ -41,6 +44,14 @@ app.use('/api/profile', profileRoute);
 
 const authRoute = require('./api/auth');
 app.use('/api/auth', authRoute);
+
+/* Serve static assets in production */
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/build'));  // Set static folder
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 /* Entry */
 app.listen(
