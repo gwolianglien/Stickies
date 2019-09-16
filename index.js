@@ -30,28 +30,25 @@ const connection = async () => {
 const app = express();
 connection();
 app.use(express.json({ extended: false }));
-const port = process.env.port || 5000;
 
 /* APIs */
-const usersRoute = require('./api/users');
-app.use('/api/users', usersRoute);
-
-const stickiesRoute = require('./api/stickies');
-app.use('/api/stickies', stickiesRoute);
-
-const profileRoute = require('./api/profile');
-app.use('/api/profile', profileRoute);
-
-const authRoute = require('./api/auth');
-app.use('/api/auth', authRoute);
+app.use('/api/users', require('./api/users'));
+app.use('/api/stickies', require('./api/stickies'));
+app.use('/api/profile', require('./api/profile'));
+app.use('/api/auth', require('./api/auth'));
 
 /* Serve static assets in production */
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'));  // Set static folder
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-    });
+    app.get(
+        '*', 
+        (req, res) => {
+            res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+        }
+    );
 }
+
+const port = process.env.port || 5000;
 
 /* Entry */
 app.listen(

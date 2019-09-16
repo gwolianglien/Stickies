@@ -1,0 +1,5 @@
+{
+    "mongoURI": "mongodb+srv://leolien:Fr33falling@stickies-dzdpp.mongodb.net/StickiesCore?retryWrites=true&w=majority",
+    "jwtSecret": "REFRESHdegrading583layersBISMUTH912",
+    "jwtExpiration": 900000
+}
