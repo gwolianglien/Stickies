@@ -1,20 +1,17 @@
 import axios from 'axios';
-
-// actions
 import { createAlert } from './alert';
 import {
     AUTH_ERROR,
     PROFILE_LOADED,
     PROFILE_CREATED,
-    CLEAR_PROFILE,
+    STICKY_CREATED,
+    STICKY_UPDATED,
 } from './constants';
 
-/* User Profile CRUD Actions */
+/* User Profile */
 export const createProfile = () => async dispatch => {
     try {
         const res = await axios.post('/api/profile/create');
-
-        // expected response: array holding users' stickies
         dispatch({
             type: PROFILE_CREATED,
             payload: res.data
@@ -23,17 +20,12 @@ export const createProfile = () => async dispatch => {
         dispatch({
             type: AUTH_ERROR
         });
-        dispatch({
-            type: CLEAR_PROFILE
-        });
     }
 }
 
 export const loadProfile = () => async dispatch => {
     try {
         const res = await axios.get('/api/profile/read');
-
-        // expected response: array holding users' stickies
         dispatch({
             type: PROFILE_LOADED,
             payload: res.data
@@ -42,14 +34,11 @@ export const loadProfile = () => async dispatch => {
         dispatch({
             type: AUTH_ERROR
         });
-        dispatch({
-            type: CLEAR_PROFILE
-        });
     }
 }
 
 
-/* Stickies CRUD Actions */
+/* Stickies */
 export const postSticky = (sticky) => async dispatch => {
     const config = {
         headers: {
@@ -58,10 +47,17 @@ export const postSticky = (sticky) => async dispatch => {
     }
     const body = JSON.stringify(sticky);
     try {
-        await axios.post('/api/profile/sticky', body, config);
-        dispatch(loadProfile());  // reload profile to update stickies
+        const res = await axios.post('/api/profile/sticky', body, config);
+
+        // expected: payload contains new Sticky object
+        dispatch({
+            type: STICKY_CREATED,
+            payload: res.data,  
+        });
+
     } catch(err) {
         const errors = err.response.data.errors;
+        console.log(errors);
         if (errors) {
             errors.forEach(error => dispatch(createAlert(error.msg, 'danger')));
         }
@@ -69,29 +65,28 @@ export const postSticky = (sticky) => async dispatch => {
 }
 
 export const updateSticky = (sticky) => async dispatch => {
-    const currId = sticky._id;
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     }
     const body = JSON.stringify(sticky);
-    try {
-        await axios.put(`/api/profile/${currId}`, body, config);
-        dispatch(createAlert('Sticky updated!', 'success', 3000));
-        dispatch(loadProfile());
-    } catch(err) {
-        dispatch(createAlert('There was an issue updating your sticky!', 'danger', 3000));
-    }
-}
-
-export const removeSticky = (sticky) => async dispatch => {
     const currId = sticky._id;
     try {
-        await axios.delete(`/api/profile/${currId}`);
-        dispatch(createAlert('Sticky removed!', 'warning', 3000));
-        dispatch(loadProfile());
+        const res = await axios.put(`/api/profile/${currId}`, body, config);
+
+        // expected: payload contains updated Sticky object
+        dispatch({
+            type: STICKY_UPDATED,
+            payload: res.data
+        });
+
     } catch(err) {
-        dispatch(createAlert('There was an issue removing your sticky!', 'danger', 3000));
+        dispatch(
+            createAlert(
+                'There was an issue updating your sticky!', 
+                'danger'
+            )
+        );
     }
 }

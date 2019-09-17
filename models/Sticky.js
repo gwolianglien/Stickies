@@ -7,7 +7,7 @@ const StickySchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: '',
+        required: true,
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
