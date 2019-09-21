@@ -54,7 +54,18 @@ router.get(
             if (!profile) {
                 return res.status(404).json({ msg: 'Profile not found' });
             }
-            res.json(profile.stickies);
+
+            // Get all details of each sticky
+            const stickies = [];
+            for (var i in profile.stickies) {
+                var stickyId = profile.stickies[i]._id;
+                var curr = await Sticky.findById(stickyId);
+                if (curr) {
+                    stickies.push(curr);
+                }
+            }
+            res.json(stickies);
+            
         } catch(err) {
             console.error(err.message);
             res.status(500).send('Server Error');
@@ -101,7 +112,7 @@ router.post(
             profile.stickies.unshift(sticky);
             await profile.save((err) => {
                 if (err) throw err;
-                res.json(sticky);
+                res.json(profile.stickies);
             });
 
         } catch(err) {
@@ -124,19 +135,6 @@ router.put(
     ],
     async (req, res) => {
         try {
-
-            // await Sticky.findOneAndUpdate(
-            //     { 
-            //         "_id": req.params.sticky_id 
-            //     }, 
-            //     {
-            //         status: req.body.status
-            //     },
-            //     (err) => {
-            //         if (err) throw err;
-            //         res.json({ "_id" : req.params.sticky_id });
-            //     }
-            // );
 
             let sticky = await Sticky.findById(req.params.sticky_id);
             if (!sticky) {
@@ -178,14 +176,25 @@ router.delete(
                 return res.status(404).json({ msg: 'Object Missing'});
             }
 
-            let profile = await Profile.findById(req.user.id);
+            let profile = await Profile.findOne({ user: req.user.id });
             if (!profile) {
                 return res.status(404).json({ msg: 'Object Missing' });
             }
-  
-            profile.stickies = profile.stickies.map(sticky => sticky.id !== req.params.sticky_id);
 
-            await sticky.findOneAndDelete({ '_id': req.params.sticky_id});
+            var removeIndex = -1;
+            for (var i = 0; i < profile.stickies.length; i++) {
+                var curr = profile.stickies[i]
+                var currId = String(curr._id);
+                if (currId === req.params.sticky_id) {
+                    removeIndex = i;
+                }
+            }
+            if (removeIndex === -1) {
+                return res.status(400).json({ msg: 'Bad Request' });
+            }
+
+            profile.stickies.splice(removeIndex, 1);
+            await Sticky.findOneAndDelete({ '_id': req.params.sticky_id});
             await profile.save(
                 (err) => {
                     if (err) throw err;

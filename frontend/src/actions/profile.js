@@ -3,19 +3,13 @@ import { createAlert } from './alert';
 import {
     AUTH_ERROR,
     PROFILE_LOADED,
-    PROFILE_CREATED,
-    STICKY_CREATED,
-    STICKY_UPDATED,
 } from './constants';
 
 /* User Profile */
 export const createProfile = () => async dispatch => {
     try {
-        const res = await axios.post('/api/profile/create');
-        dispatch({
-            type: PROFILE_CREATED,
-            payload: res.data
-        });
+        await axios.post('/api/profile/create');
+        dispatch(loadProfile());
     } catch(err) {
         dispatch({
             type: AUTH_ERROR
@@ -47,14 +41,9 @@ export const postSticky = (sticky) => async dispatch => {
     }
     const body = JSON.stringify(sticky);
     try {
-        const res = await axios.post('/api/profile/sticky', body, config);
-
-        // expected: payload contains new Sticky object
-        dispatch({
-            type: STICKY_CREATED,
-            payload: res.data,  
-        });
-
+        await axios.post('/api/profile/sticky', body, config);
+        dispatch(loadProfile());
+        dispatch(createAlert('Your sticky was added!', 'success', 3000));
     } catch(err) {
         const errors = err.response.data.errors;
         console.log(errors);
@@ -71,22 +60,21 @@ export const updateSticky = (sticky) => async dispatch => {
         }
     }
     const body = JSON.stringify(sticky);
-    const currId = sticky._id;
     try {
-        const res = await axios.put(`/api/profile/${currId}`, body, config);
-
-        // expected: payload contains updated Sticky object
-        dispatch({
-            type: STICKY_UPDATED,
-            payload: res.data
-        });
-
+        await axios.put(`/api/profile/${sticky._id}`, body, config);
+        dispatch(loadProfile());
+        dispatch(createAlert('Your sticky was updated!', 'success', 3000));
     } catch(err) {
-        dispatch(
-            createAlert(
-                'There was an issue updating your sticky!', 
-                'danger'
-            )
-        );
+        dispatch(createAlert('There was an issue updating your sticky!', 'danger', 3000));
+    }
+}
+
+export const deleteSticky = (sticky) => async dispatch => {
+    try {
+        await axios.delete(`/api/profile/${sticky._id}`);
+        dispatch(loadProfile());
+        dispatch(createAlert('Your sticky was removed!', 'success', 3000));
+    } catch(err) {
+        dispatch(createAlert('There was an issue removing your sticky!', 'danger', 3000));
     }
 }

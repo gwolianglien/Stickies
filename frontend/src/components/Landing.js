@@ -22,7 +22,6 @@ const Landing = ({ authenticated }) => {
 
     return (
         <div className="app-border app-border-top">
-            { console.log(authenticated)}
             <Banner />
             <Login />
         </div>

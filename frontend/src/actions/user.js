@@ -28,6 +28,7 @@ export const load = () => async dispatch => {
             type: LOADED,
             payload: res.data
         });
+        dispatch(loadProfile());
     } catch(err) {
         dispatch({
             type: AUTH_ERROR

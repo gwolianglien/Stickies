@@ -31,7 +31,8 @@ const StickyForm = ({ postSticky }) => {
                     value={stickyForm.note}
                     onChange={event => handleChange(event)}
                 />
-                <small id="note" className="form-text text-muted">Just hit enter when you're done!</small>
+                <button type="submit" className="btn btn-primary btn-block hide-lg">Add Your Sticky!</button>
+                <small id="note" className="form-text text-muted hide-sm">Just hit enter when you're done!</small>
             </div>
         </form>
     )
